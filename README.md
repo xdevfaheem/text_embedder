@@ -51,8 +51,8 @@ print(embeddings)
 Compute similarity between two embeddings:
 
 ```python
-embedding1 = embedder.embed(["Hello world"])[0]
-embedding2 = embedder.embed(["Hi there"])[0]
+embedding1 = embedder.embed(["Hello world"])
+embedding2 = embedder.embed(["Hi there"])
 similarity_score = embedder.get_similarity(embedding1, embedding2)
 print(f"Similarity Score: {similarity_score}")
 ```
