@@ -6,7 +6,7 @@ import numpy as np
 import warnings
 from torch import Tensor
 
-def get_current_device() -> Literal["mps", "cuda", "npu", "hpu", "cpu"]:
+def get_current_device() -> Literal["mps", "cuda", "npu" "cpu"]:
     """
     Returns the name of the available device
     """
@@ -16,12 +16,8 @@ def get_current_device() -> Literal["mps", "cuda", "npu", "hpu", "cpu"]:
         return "mps"
     elif is_torch_npu_available():
         return "npu"
-    elif importlib.util.find_spec("habana_frameworks") is not None:
-        import habana_frameworks.torch.hpu as hthpu
-
-        if hthpu.is_available():
-            return "hpu"
-    return "cpu"
+    else:
+        return "cpu"
 
 """Utilities for similarity function"""
 

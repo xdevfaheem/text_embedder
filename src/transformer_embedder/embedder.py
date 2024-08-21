@@ -8,7 +8,6 @@ import torch.nn.functional as F
 from tqdm.auto import trange
 from transformer_embedder.utils import get_current_device, get_similarity_function, quantize_embeddings
 
-
 # available pooling modes
 POOLING_MODES = (
     "cls",
@@ -47,7 +46,6 @@ class TransformersEmbedder:
                 cache_dir: str = "./",
                 sim_fn: str = "cosine",
                 max_seq_length: int = None,
-                device_map: str = "auto",
                 device: str = None,
                 pooling_strategy: List[str] = ["cls"],
                 truncate_dim: int = None,
@@ -70,7 +68,6 @@ class TransformersEmbedder:
             cache_dir (str): Directory to cache the model.
             sim_fn (str): Similarity function to use ('cosine', 'dot', 'euclidean', 'manhattan').
             max_seq_length (int, optional): Maximum sequence length for the tokenizer.
-            device_map (str): Device map for model distribution, incase if there is multi device ("cpu", "cuda") setup. can be `auto` or you can specify your own device map for the model layers.
             device (str, optional): single specific device to use (e.g., 'cuda').
             pooling_strategy (List[str]): List of pooling strategies to use ('cls', 'max', 'mean', etc.).
             truncate_dim (int, optional): Dimension to truncate the output embeddings to. defaults to model's default embedding size.
@@ -87,16 +84,14 @@ class TransformersEmbedder:
         try:
             from transformers import AutoModel, AutoTokenizer
 
-            assert not (device_map and device), "Both device_map and device should not be passed, pass either one"
-
             # Initialize tokenizer and model
             self._tokenizer = AutoTokenizer.from_pretrained(model, **tokenizer_kwargs)
-            self._model = AutoModel.from_pretrained(model, cache_dir=cache_dir, device_map=device_map, **model_kwargs)
+            self._model = AutoModel.from_pretrained(model, cache_dir=cache_dir, **model_kwargs)
             
             # determine the device and move the model to it both device and device_map are not given.
-            if not (device and device_map):
+            if not device:
                 device = get_current_device()
-                self._model.to(device)
+            self._model.to(device)
             self.similarity_fn = get_similarity_function(sim_fn)
 
         except ImportError:
@@ -128,11 +123,11 @@ class TransformersEmbedder:
         self.return_type = return_type
 
         if self.verbose:
-            self.logger.info("Model's max length is %d", self._model.config.max_position_embeddings)
-            self.logger.info("Embedding Dimension of the model: %d", self.pooling_out_dim)
-            self.logger.info("Model initialised on %s", self._model.device)
+            logger.info("Model's max length is %d", self._model.config.max_position_embeddings)
+            logger.info("Embedding Dimension of the model: %d", self.pooling_out_dim)
+            logger.info("Model initialised on %s", self._model.device)
 
-    def get_similarity(self, embedding1: list | np.array | Tensor, embedding2: list | np.array | Tensor) -> Union[float, List[float]]:
+    def get_similarity(self, embedding1: list | np.ndarray | Tensor, embedding2: list | np.ndarray | Tensor) -> Union[float, List[float]]:
         """
         Compute similarity between two embeddings.
 
@@ -277,7 +272,7 @@ class TransformersEmbedder:
                 if self.normalize:
                     embeddings = F.normalize(embeddings, p=2, dim=1) #Lp-norm. since p=2, it would be euclidean norm.
                 
-                total_embeddings.append(embeddings)
+                total_embeddings.extend(embeddings)
 
         # Quantize embeddings if specified
         if self.precision:
