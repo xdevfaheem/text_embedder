@@ -26,10 +26,10 @@ pip install transformer_embedder
 Initialize the `TransformersEmbedder` with your desired configurations:
 
 ```python
-from transformer_embedder import TransformersEmbedder
+from text_embedder import TextEmbedder
 
-embedder = TransformersEmbedder(
-    model="bert-base-uncased",
+embedder = TextEmbedder(
+    model="BAAI/bge-small-en",
     sim_fn="cosine",
     pooling_strategy=["cls"],
     device="cuda",  # Specify device if needed
