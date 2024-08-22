@@ -13,10 +13,10 @@
 
 ## 🛠 Installation
 
-Install `transformer_embedder` from PyPI using pip:
+Install `text_embedder` from PyPI using pip:
 
 ```bash
-pip install transformer_embedder
+pip install text_embedder
 ```
 
 ## 📖 Usage
