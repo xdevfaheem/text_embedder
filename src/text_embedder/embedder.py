@@ -6,7 +6,12 @@ import torch
 from torch import Tensor
 import torch.nn.functional as F
 from tqdm.auto import trange
-from text_embedder.utils import get_current_device, get_similarity_function, quantize_embeddings
+from text_embedder.utils import (get_current_device,
+                                 get_similarity_function,
+                                 quantize_embeddings,
+                                 convert_to_tensor,
+                                 convert_to_numpy,
+                                 convert_to_list) 
 
 # available pooling modes
 POOLING_MODES = (
@@ -275,17 +280,18 @@ class TextEmbedder:
                 total_embeddings.extend(embeddings)
 
         # Quantize embeddings if specified
-        if self.precision:
+        if self.precision and self.precision!="float32":
             total_embeddings = quantize_embeddings(total_embeddings, self.precision)
 
         # Cast to specified return type
         if len(total_embeddings):
             if self.return_type == "torch":
-                out = torch.stack(total_embeddings)
+                out = convert_to_tensor(total_embeddings)
             elif self.return_type == "numpy":
-                out = torch.stack(total_embeddings).detach().cpu().numpy()
+                out = convert_to_numpy(total_embeddings)
+
             elif self.return_type == "list":
-                out = torch.stack(total_embeddings).tolist()
+                out = convert_to_list(total_embeddings)
             else:
                 raise ValueError(f"Unsupported return type! {self.__class__.__name__} only supports ['torch', 'numpy', 'list']. Got {self.return_type}")
 
@@ -293,4 +299,6 @@ class TextEmbedder:
         else:
             raise ValueError("No embeddings generated! Ensure that you passed valid input.")
 
+        if isinstance(input, str):
+            out = out[0]
         return out

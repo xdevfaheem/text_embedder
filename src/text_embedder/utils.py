@@ -17,6 +17,54 @@ def get_current_device() -> Literal["mps", "cuda", "npu" "cpu"]:
         return "npu"
     else:
         return "cpu"
+    
+def convert_to_tensor(tensor: Tensor | np.ndarray | list):
+    
+    if isinstance(tensor, np.ndarray):
+        return torch.from_numpy(tensor)
+    
+    elif isinstance(tensor, list):
+        if isinstance(tensor[0], Tensor):
+            return torch.stack(tensor)
+        elif isinstance(tensor[0], np.ndarray):
+            return torch.from_numpy(tensor)
+    
+    elif isinstance(tensor, Tensor):
+        return tensor
+    
+    else:
+        raise ValueError("Invalid type: {}".format(type(tensor)))
+    
+def convert_to_numpy(tensor: Tensor | np.ndarray | list):
+    
+    if isinstance(tensor, Tensor):
+        return tensor.detach().cpu().resolve_conj().resolve_neg().numpy()
+    
+    elif isinstance(tensor, list):
+        if isinstance(tensor[0], Tensor):
+            if tensor[0].dtype == torch.bfloat16:
+                return np.asarray([t.float().numpy() for t in tensor])
+            else:
+                return np.asarray([t.numpy() for t in tensor])
+        elif isinstance(tensor[0], np.ndarray):
+            return np.asarray(tensor)
+    
+    elif isinstance(tensor, np.ndarray):
+        return tensor
+    
+    else:
+        raise ValueError("Invalid type: {}".format(type(tensor)))
+    
+def convert_to_list(tensor: Tensor | np.ndarray | list):
+
+    if isinstance(tensor, Tensor) or isinstance(tensor, np.ndarray):
+        return tensor.tolist()
+    
+    elif isinstance(tensor, list):
+        if isinstance(tensor[0], Tensor):
+            return torch.stack(tensor).tolist()
+        elif isinstance(tensor[0], np.ndarray):
+            return np.asarray(tensor).tolist()        
 
 """Utilities for similarity function"""
 
@@ -25,7 +73,7 @@ def convert_to_batch_tensor(tensor: list | np.ndarray | Tensor) -> Tensor:
         add a batch dimension if it's a single dimensional tensor
     """
     tensor = torch.tensor(tensor) if not isinstance(tensor, Tensor) else tensor
-    return tensor.unsqueeze(0) if tensor.dim == 1 else tensor
+    return tensor.unsqueeze(0) if tensor.dim() == 1 else tensor
 
 
 def normalize_tensor(tensor: Tensor) -> Tensor:
@@ -129,7 +177,7 @@ def quantize_embeddings(
             embeddings = [embedding.numpy(force=True) for embedding in embeddings]
         embeddings = np.array(embeddings)
 
-    if embeddings.dtype not in (np.float32, np.float64):
+    if str(embeddings.dtype).endswith("int8"):
         raise ValueError("Embeddings to quantize must be of float type.")
 
     if clip: # clips the embeddings to a specified range which could prevent extreme values from affecting quantization.
@@ -200,7 +248,7 @@ def quantize_embeddings(
             quantized_embeddings = (packed_bits.reshape(embeddings.shape[0], bytes_per_row) - 128).astype(np.int8)
         else:
             quantized_embeddings = packed_bits.reshape((embeddings.shape[0], bytes_per_row))
-        return quantized_embeddings
+        return torch.from_numpy(quantized_embeddings)
 
 
     elif precision == "mixed":
