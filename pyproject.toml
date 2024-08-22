@@ -4,18 +4,19 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "transformers-embedder"
-version = "0.1.0"
+dynamic = ["version"]
 description = "A unified inference library for transformer-based pre-trained embedding models "
-readme = "README.md"
+readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.7"
-license = { text = "MIT" }
 authors = [
     { name = "Faheem", email = "xdevfaheem@gmail.com" }
 ]
+license = {file = "LICENSE"}
+keywords = ["transformers", "embeddings", "text-embedding", "NLP", "rag", "huggingface", "similarity"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.7",
@@ -23,12 +24,12 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence :: Transformers :: Embeddings :: RAG",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence"
 ]
 
 [project.urls]
-"Source" = "https://github.com/xdevfaheem/transformers_embedder"
-"Tracker" = "https://github.com/xdevfaheem/transformers_embedder/issues"
+Repository = "https://github.com/xdevfaheem/transformers_embedder"
+Issues = "https://github.com/xdevfaheem/transformers_embedder/issues"
 
 [dependencies]
 numpy = "^1.26"
@@ -41,9 +42,7 @@ dev = [
     "pytest",
 ]
 
-[tool.setuptools]
-packages = ["transformer_embedder"]
 
-[tool.setuptools.package-data]
-"transformer_embedder" = ["*.py"]
+[tool.setuptools.dynamic]
+version = {attr = "transformer_embedder.__version__"}
 
