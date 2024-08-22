@@ -1,6 +1,6 @@
 # Text Embedder
 
-`text_embedder` is a powerful and flexible Python library for generating and managing text embeddings using pre-trained transformer based embedding models. It offers support for various pooling strategies, similarity functions, and quantization techniques, making it a versatile tool for a variety of NLP tasks, including embedding, similarity search, clustering, and more.
+`text_embedder` is a powerful and flexible Python library for generating and managing text embeddings using pre-trained transformer based multilingual embedding models. It offers support for various pooling strategies, similarity functions, and quantization techniques, making it a versatile tool for a variety of NLP tasks, including embedding, similarity search, clustering, and more.
 
 ## 🚀 Features
 
