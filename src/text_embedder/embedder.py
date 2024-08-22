@@ -199,7 +199,7 @@ class TextEmbedder:
         """ Validate and format input."""
         if isinstance(input, str) and input.strip():
             return [input]
-        elif isinstance(list[str], input) and all(isinstance(item, str) for item in input):
+        elif isinstance(input, list) and all(isinstance(item, str) for item in input):
             return input
         raise ValueError(f"Unsupported input type. {self.__class__.__name__}.__call__() only supports string or list of strings. Got {type(input)}")
 
