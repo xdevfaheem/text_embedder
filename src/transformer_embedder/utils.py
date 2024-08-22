@@ -1,7 +1,6 @@
 from typing import Literal
 import torch
 from transformers import is_torch_npu_available
-import importlib
 import numpy as np
 import warnings
 from torch import Tensor
