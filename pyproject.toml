@@ -3,16 +3,16 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "transformers-embedder"
+name = "text-embedder"
 dynamic = ["version"]
-description = "A unified inference library for transformer-based pre-trained embedding models "
+description = "A unified inference library for transformer-based pre-trained multilingual embedding models "
 readme = {file = "README.md", content-type = "text/markdown"}
 requires-python = ">=3.7"
 authors = [
     { name = "Faheem", email = "xdevfaheem@gmail.com" }
 ]
 license = {file = "LICENSE"}
-keywords = ["transformers", "embeddings", "text-embedding", "NLP", "rag", "huggingface", "similarity"]
+keywords = ["transformers", "embeddings", "NLP", "rag", "pytorch", "huggingface", "similarity"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -28,8 +28,8 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/xdevfaheem/transformers_embedder"
-Issues = "https://github.com/xdevfaheem/transformers_embedder/issues"
+Repository = "https://github.com/xdevfaheem/text_embedder"
+Issues = "https://github.com/xdevfaheem/text_embedder/issues"
 
 [dependencies]
 numpy = "^1.26"
@@ -44,5 +44,5 @@ dev = [
 
 
 [tool.setuptools.dynamic]
-version = {attr = "transformer_embedder.__version__"}
+version = {attr = "text_embedder.__version__"}
 

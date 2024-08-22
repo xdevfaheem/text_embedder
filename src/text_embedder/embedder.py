@@ -6,7 +6,7 @@ import torch
 from torch import Tensor
 import torch.nn.functional as F
 from tqdm.auto import trange
-from transformer_embedder.utils import get_current_device, get_similarity_function, quantize_embeddings
+from text_embedder.utils import get_current_device, get_similarity_function, quantize_embeddings
 
 # available pooling modes
 POOLING_MODES = (
@@ -32,7 +32,7 @@ type_checks = {
     "list": list
 }
 
-class TransformersEmbedder:
+class TextEmbedder:
     """
     A unified inference class for transformer-based pre-trained embedding models on HF
 
