@@ -33,7 +33,6 @@ embedder = TextEmbedder(
     sim_fn="cosine",
     pooling_strategy=["cls"],
     device="cuda",  # Specify device if needed
-    precision="int8"  # Optional: for quantization
 )
 ```
 
