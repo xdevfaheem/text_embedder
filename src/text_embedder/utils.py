@@ -248,7 +248,6 @@ def quantize_embeddings(
             quantized_embeddings = (packed_bits.reshape(embeddings.shape[0], bytes_per_row) - 128).astype(np.int8)
         else:
             quantized_embeddings = packed_bits.reshape((embeddings.shape[0], bytes_per_row))
-        return torch.from_numpy(quantized_embeddings)
 
 
     elif precision == "mixed":
